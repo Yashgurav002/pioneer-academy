@@ -111,6 +111,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Rest framework custom
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -136,3 +143,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # New user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Custom field
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+ 
