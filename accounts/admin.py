@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, CoachProfile
+from .models import CustomUser
 
 
 @admin.register(CustomUser)
@@ -8,8 +8,3 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ("Additional Info", {"fields": ("role", "joining_date")}),
     )
-
-
-@admin.register(CoachProfile)
-class CoachProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "specialization", "experience_years", "salary")

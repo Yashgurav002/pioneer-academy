@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'documents',
     'attendance',
     'training',
+    'students',
     'api',
     'django.contrib.admin',
     'django.contrib.auth',
