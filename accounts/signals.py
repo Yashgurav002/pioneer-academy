@@ -1,27 +1,24 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import transaction
 from .models import CustomUser
-from profiles.models import CoachProfile
+from profiles.models import CoachProfile, PlayerProfile, Profile
 
 
 @receiver(post_save, sender=CustomUser)
-def create_or_update_coach_profile(sender, instance, **kwargs):
-    print("Signal triggered for:", instance.username)
+def handle_role_profiles(sender, instance, created, **kwargs):
+
+    # Always ensure profile exists
+    profile, _ = Profile.objects.get_or_create(user=instance)
 
     if instance.role == 'COACH':
-        print("Role is COACH")
+        CoachProfile.objects.get_or_create(profile=profile)
+        PlayerProfile.objects.filter(profile=profile).delete()
 
-        if hasattr(instance, 'profile'):
-            print("Profile exists, creating CoachProfile")
-
-            CoachProfile.objects.get_or_create(
-                profile=instance.profile
-            )
+    elif instance.role == 'PLAYER':
+        PlayerProfile.objects.get_or_create(profile=profile)
+        CoachProfile.objects.filter(profile=profile).delete()
 
     else:
-        # Optional: If role changes away from COACH,
-        # you may delete coach profile automatically
-        if hasattr(instance, 'profile'):
-            CoachProfile.objects.filter(
-                profile=instance.profile
-            ).delete()
+        CoachProfile.objects.filter(profile=profile).delete()
+        PlayerProfile.objects.filter(profile=profile).delete()
